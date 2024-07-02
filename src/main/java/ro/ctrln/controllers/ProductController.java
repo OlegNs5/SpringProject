@@ -22,25 +22,36 @@ public class ProductController {
         return productService.getProduct(productCode);
     }
 
-    @PostMapping("/{costumerId}")
-    public void addProduct(@RequestBody ProductDTO productDTO,@PathVariable long costumerId){
-        productService.addProduct(productDTO,costumerId);
+    @PostMapping("/{customerId}")
+    public void addProduct(@RequestBody ProductDTO productDTO,@PathVariable long customerId){
+        productService.addProduct(productDTO,customerId);
     }
 
-    @PutMapping("/{costumerId}")
-    public void updateProduct(@RequestBody ProductDTO productDTO,@PathVariable Long costumerId) throws InvalidProductCodeException {
-        productService.updateProduct(productDTO,costumerId);
+    @PutMapping("/{customerId}")
+    public void updateProduct(@RequestBody ProductDTO productDTO,@PathVariable Long customerId) throws InvalidProductCodeException {
+        productService.updateProduct(productDTO,customerId);
     }
 
-    @DeleteMapping("/{productCode}/{costumerId}")
-    public void deleteProduct(@PathVariable String productCode,@PathVariable Long costumerId) throws InvalidProductCodeException {
-        productService.deleteProduct(productCode,costumerId);
-
+    @DeleteMapping("/{productCode}/{customerId}")
+    public void deleteProduct(@PathVariable String productCode,@PathVariable Long customerId) throws InvalidProductCodeException {
+        productService.deleteProduct(productCode,customerId);
     }
 
     @GetMapping
     public List<ProductDTO> getProduct(){
         return productService.getAllProducts();
     }
+
+    @PatchMapping("/{productCode}/{quantity}/{customerId}")
+    public void addStock(@PathVariable String productCode,@PathVariable Integer quantity, @PathVariable Long customerId) throws InvalidProductCodeException {
+        productService.addStock(productCode, quantity, customerId);
+    }
+
+
+
+
+
+
+
 
 }

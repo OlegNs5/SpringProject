@@ -36,10 +36,11 @@ public class ProductService {
     }
 
     public void updateProduct(ProductDTO productDTO, Long costumerId) throws InvalidProductCodeException {
-        log.info("Costumer with id {} is trying to update product!",costumerId,productDTO.getCode());
-        if (productDTO.getCode()==null){
+
+        if (productDTO == null || productDTO.getCode()==null){
             throw new InvalidProductCodeException();
         }
+        log.info("Customer with id {} is trying to update product {}",costumerId,productDTO.getCode());
 
         Product product = getProductEntity(productDTO.getCode()); //Actualizam un produs
         product.setDescription(productDTO.getDescription());
@@ -51,7 +52,7 @@ public class ProductService {
     }
 
     public void deleteProduct(String productCode, Long costumerId) throws InvalidProductCodeException {
-        log.info("Costumer with id {} is trying to update product!", costumerId, productCode); //log.info vine din @Slf4j
+        log.info("Customer with id {} is trying to update product {}", costumerId, productCode); //log.info vine din @Slf4j
         if (productCode == null) {
             throw new InvalidProductCodeException();
         }
@@ -61,6 +62,20 @@ public class ProductService {
 
     }
 
+    public List<ProductDTO> getAllProducts() {
+        return productRepository.findAll().stream().map(productMapper::toDTO).collect(Collectors.toList());
+    }
+
+
+    public void addStock(String productCode, Integer quantity, Long customerId) throws InvalidProductCodeException {
+        if (productCode == null) {
+            throw new InvalidProductCodeException();
+        }
+        Product product = getProductEntity(productCode);
+        product.setStock(product.getStock() + quantity);
+        productRepository.save(product);
+    }
+
     private Product getProductEntity(String productCode) throws InvalidProductCodeException {
         Optional<Product> product = productRepository.findByCode(productCode);
         if (!product.isPresent()){
@@ -68,11 +83,4 @@ public class ProductService {
         }
         return product.get();
     }
-
-    public List<ProductDTO> getAllProducts() {
-
-        return productRepository.findAll().stream().map(productMapper::toDTO).collect(Collectors.toList());
-    }
-
-
 }

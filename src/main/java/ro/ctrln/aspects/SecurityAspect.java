@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ro.ctrln.entities.User;
 import ro.ctrln.enums.Roles;
-import ro.ctrln.exceptions.InvalidCostumerIdException;
+import ro.ctrln.exceptions.InvalidCustomerIdException;
 import ro.ctrln.exceptions.InvalidOperationException;
 import ro.ctrln.repositories.UserRepository;
 
@@ -39,54 +39,54 @@ public class SecurityAspect {
     }
 
     @Before("ro.ctrln.aspects.SecurityAspect.addProductPointcut()")
-    public void checkSecurityBeforeAddingProduct(JoinPoint joinPoint) throws InvalidCostumerIdException, InvalidOperationException {
+    public void checkSecurityBeforeAddingProduct(JoinPoint joinPoint) throws InvalidCustomerIdException, InvalidOperationException {
         Long costumerId = (Long) joinPoint.getArgs()[1];
         Optional<User> userOptional = userRepository.findById(costumerId);
         if (!userOptional.isPresent()){
-            throw new InvalidCostumerIdException();
+            throw new InvalidCustomerIdException();
         }
 
         User user = userOptional.get();
 
         if (userIsNotAllowedToAddProduct(user.getRoles())){
-            throw new InvalidOperationException("Costumer NOT allowed to add products!");
+            throw new InvalidOperationException("Customer NOT allowed to add products!");
         }
 
-        log.info("Costumer ID: {} will ADD the product! ",costumerId);
+        log.info("Customer ID: {} will ADD the product! ",costumerId);
     }
 
     @Before("ro.ctrln.aspects.SecurityAspect.updateProductPointcut()")
-    public void checkSecurityBeforeUpdatingProduct(JoinPoint joinPoint) throws InvalidCostumerIdException, InvalidOperationException {
+    public void checkSecurityBeforeUpdatingProduct(JoinPoint joinPoint) throws InvalidCustomerIdException, InvalidOperationException {
         Long costumerId = (Long) joinPoint.getArgs()[1];
         Optional<User> userOptional = userRepository.findById(costumerId);
         if (!userOptional.isPresent()){
-            throw new InvalidCostumerIdException();
+            throw new InvalidCustomerIdException();
         }
 
         User user = userOptional.get();
 
         if (userIsNotAllowedToUpdateProduct(user.getRoles())){
-            throw new InvalidOperationException("Costumer NOT allowed to UPDATE products!");
+            throw new InvalidOperationException("Customer NOT allowed to UPDATE products!");
         }
 
-        log.info("Costumer ID: {} will UPDATE the product! ",costumerId);
+        log.info("Customer ID: {} will UPDATE the product! ",costumerId);
     }
 
     @Before("ro.ctrln.aspects.SecurityAspect.deleteProductPointcut()")
-    public void checkSecurityBeforeDeletingProduct(JoinPoint joinPoint) throws InvalidCostumerIdException, InvalidOperationException {
+    public void checkSecurityBeforeDeletingProduct(JoinPoint joinPoint) throws InvalidCustomerIdException, InvalidOperationException {
         Long costumerId = (Long) joinPoint.getArgs()[1];
         Optional<User> userOptional = userRepository.findById(costumerId);
         if (!userOptional.isPresent()){
-            throw new InvalidCostumerIdException();
+            throw new InvalidCustomerIdException();
         }
 
         User user = userOptional.get();
 
         if (userIsNotAllowedToDeleteProduct(user.getRoles())){
-            throw new InvalidOperationException("Costumer NOT allowed to DELETE products!");
+            throw new InvalidOperationException("Customer NOT allowed to DELETE products!");
         }
 
-        log.info("Costumer ID: {} will DELETE the product! ",costumerId);
+        log.info("Customer ID: {} will DELETE the product! ",costumerId);
     }
 
 
